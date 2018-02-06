@@ -418,6 +418,7 @@ var Navigator = createReactClass({
 
     this._sceneRefs = [];
 
+    // console.log('initialRouteStack route stack')
     var routeStack = this.props.initialRouteStack || [this.props.initialRoute];
     invariant(
       routeStack.length >= 1,
@@ -431,6 +432,7 @@ var Navigator = createReactClass({
         'initialRoute is not in initialRouteStack.'
       );
     }
+    
     return {
       sceneConfigStack: routeStack.map(
         (route) => this.props.configureScene(route, routeStack)
@@ -442,6 +444,17 @@ var Navigator = createReactClass({
       pendingGestureProgress: null,
       transitionQueue: [],
     };
+  },
+  
+  componentWillReceiveProps: function(newProps) {
+    // console.log("new props",newProps)
+//     console.log(newProps.initialRoute);
+    let nextRouteStack = [newProps.initialRoute]
+    invariant(
+      nextRouteStack.length >= 1,
+      'Navigator requires props.initialRoute or props.initialRouteStack.'
+    );
+    this.immediatelyResetRouteStack(nextRouteStack);
   },
 
   componentWillMount: function() {
@@ -512,6 +525,7 @@ var Navigator = createReactClass({
   immediatelyResetRouteStack: function(nextRouteStack) {
     var destIndex = nextRouteStack.length - 1;
     this._emitWillFocus(nextRouteStack[destIndex]);
+    // console.log('immediate reset route stack')
     this.setState({
       routeStack: nextRouteStack,
       sceneConfigStack: nextRouteStack.map(
@@ -1091,6 +1105,7 @@ var Navigator = createReactClass({
    */
   push: function(route) {
     invariant(!!route, 'Must supply route to push');
+    // console.log('push  route stack');
     var activeLength = this.state.presentedIndex + 1;
     var activeStack = this.state.routeStack.slice(0, activeLength);
     var activeAnimationConfigStack = this.state.sceneConfigStack.slice(0, activeLength);
@@ -1114,6 +1129,8 @@ var Navigator = createReactClass({
    * @param {number} n The number of scenes to pop. Should be an integer.
    */
   popN: function(n) {
+    
+    // console.log('popN route stack');
     invariant(typeof n === 'number', 'Must supply a number to popN');
     n = parseInt(n, 10);
     if (n <= 0 || this.state.presentedIndex - n < 0) {
@@ -1180,6 +1197,7 @@ var Navigator = createReactClass({
     if (index === this.state.presentedIndex) {
       this._emitWillFocus(route);
     }
+    // console.log('replaceAtIndex  route stack');
     this.setState({
       routeStack: nextRouteStack,
       sceneConfigStack: nextAnimationModeStack,
@@ -1211,6 +1229,7 @@ var Navigator = createReactClass({
    * Pop to the first scene in the stack, unmounting every other scene.
    */
   popToTop: function() {
+    // console.log('popToTop route stack');
     this.popToRoute(this.state.routeStack[0]);
   },
 
@@ -1220,6 +1239,7 @@ var Navigator = createReactClass({
    * @param {object} route Route to pop to.
    */
   popToRoute: function(route) {
+    // console.log('popToRoute route stack');
     var indexOfRoute = this.state.routeStack.indexOf(route);
     invariant(
       indexOfRoute !== -1,
@@ -1265,6 +1285,7 @@ var Navigator = createReactClass({
   _cleanScenesPastIndex: function(index) {
     var newStackLength = index + 1;
     // Remove any unneeded rendered routes.
+    // console.log('clean scenes  route stack')
     if (newStackLength < this.state.routeStack.length) {
       this.setState({
         sceneConfigStack: this.state.sceneConfigStack.slice(0, newStackLength),
@@ -1274,6 +1295,7 @@ var Navigator = createReactClass({
   },
 
   _renderScene: function(route, i) {
+    // console.log("rendered Scene ",route)
     var disabledSceneStyle = null;
     var disabledScenePointerEvents = 'auto';
     if (i !== this.state.presentedIndex) {
