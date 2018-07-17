@@ -449,12 +449,15 @@ var Navigator = createReactClass({
   componentWillReceiveProps: function(newProps) {
     // console.log("new props",newProps)
 //     console.log(newProps.initialRoute);
-    let nextRouteStack = [newProps.initialRoute]
-    invariant(
-      nextRouteStack.length >= 1,
-      'Navigator requires props.initialRoute or props.initialRouteStack.'
-    );
-    this.immediatelyResetRouteStack(nextRouteStack);
+    if (newProps.initialRoute.component.name != this.state.routeStack[0].component.name) {
+      console.log("inside_componentWillReceiveProps_block==========================")
+      let nextRouteStack = [newProps.initialRoute]
+      invariant(
+        nextRouteStack.length >= 1,
+        'Navigator requires props.initialRoute or props.initialRouteStack.'
+      );
+      this.immediatelyResetRouteStack(nextRouteStack);
+    }
   },
 
   componentWillMount: function() {
