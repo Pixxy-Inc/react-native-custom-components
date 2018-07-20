@@ -448,7 +448,7 @@ var Navigator = createReactClass({
   
   componentWillReceiveProps: function(newProps) {
     // console.log("new props",newProps)
-//     console.log(newProps.initialRoute);
+    // console.log(newProps.initialRoute);
     if (newProps.initialRoute.component.name != this.state.routeStack[0].component.name) {
       // If the initialRoute is the same component as the new initialComponent do not re-render the component.
       // We needed to do this in order to prevent a re-render of auth0_login when a  deeplink is followed.
